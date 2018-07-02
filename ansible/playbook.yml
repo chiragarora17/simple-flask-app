@@ -1,0 +1,5 @@
+- name: Deploy a web application
+  hosts: db_web_servers
+  tasks:
+    - name: Ping
+      ping
