@@ -40,13 +40,13 @@ sudo pip install flask-mysql
 
 ## 5. Run the server
 ```
-FLASK_APP=app.py flask run --host=0.0.0.0
+FLASK_APP=app.py flask run --host=0.0.0.0 --port=80
 ```
 ## 6. Test
 
 Open a browser and go to URL
 ```
-    http://<IP>:5000                            => Welcome
-    http://<IP>:5000/how%20are%20you            => I am good, how about you?
-    http://<IP>:5000/read%20from%20database     => JOHN
+    http://<IP>:80                            => Welcome
+    http://<IP>:80/how%20are%20you            => I am good, how about you?
+    http://<IP>:80/read%20from%20database     => JOHN
 ```
