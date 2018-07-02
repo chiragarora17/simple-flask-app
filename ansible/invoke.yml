@@ -1,0 +1,40 @@
+- name: creating db and invoking the application
+  hosts: db_web_servers
+  any_errors_fatal: true
+  tasks:
+    - name: create application database
+      mysql_db: 
+        name: employee_db 
+        state: present 
+        login_user: root 
+
+    - name: create db user 
+      mysql_user:
+        name: db_user
+        login_user: root 
+        password: 'password'
+        priv: '*.*:ALL'
+        state: present
+        host: 'localhost'
+
+    - name: install python flask
+      become: yes
+      sudo: yes
+      become_method: sudo
+      pip:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - flask
+        - flask-mysql
+
+    - name: Copy the app.py
+      copy: src=app.py dest=/opt/app.py
+      become: yes
+      become_method: sudo
+
+
+    - name: start the web server 
+      command: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 --port=80 &
+      become: yes
+      become_method: sudo

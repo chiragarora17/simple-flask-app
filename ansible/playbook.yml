@@ -6,15 +6,19 @@
 
     - name: "install group package"
       remote_user: chiragarora
-      become: true
+      become: yes
       sudo: yes
+      become_method: sudo
       yum: name="@development" state=present
 
     - name: install all dependencies
-      yum: name=python state=installed
+      yum: 
+        name: "{{ item }}" 
+        state: installed
       remote_user: chiragarora
-      become: true
+      become: yes
       sudo: yes
+      become_method: sudo
       with_items:
         - python 
         - python-setuptools
@@ -25,49 +29,41 @@
 
     - name: install the mysql community rpm from a remote repo
       remote_user: chiragarora
-      become: true
+      become: yes
       sudo: yes
+      become_method: sudo
       yum:
         name: http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
-        state: present
+        state: installed
 
+    - name: yum update
+      remote_user: chiragarora
+      become: yes
+      sudo: yes
+      become_method: sudo
+      yum:
+        name: '*'
+        state: latest
+
+
+    - name: install mysql-server
+      yum: name='mysql-server' state=installed
+      become: yes
+      sudo: yes
+      become_method: sudo
 
     - name: install mysql
       yum: name='mysql' state=installed
-      remote_user: chiragarora
-      become: true
+      become: yes
       sudo: yes
-      with_items:
-           - mysql-server
-           - mysql
+      become_method: sudo
 
     - name: start mysql service
+      become: yes
+      sudo: yes
+      become_method: sudo
       service:
         name: mysql
         state: started
         enabled: yes
 
-    - name: create application database
-      mysql_db: name=employee_db state=present
-
-    - name: create db user 
-      mysql_user:
-        name: db_user
-        password: password
-        priv: '*.*:ALL'
-        state: present
-        host: '%'
-
-    - name: install python flask
-      pip:
-        name: {{ item }}
-        state: present
-      with_items:
-        - flask
-        - flask-mysql
-
-    - name: Copy the app.py
-      copy: src=app.py dest=/opt/app.py
-
-    - name: start the web server 
-      shell: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 --port=80 &
