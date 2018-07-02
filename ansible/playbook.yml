@@ -3,3 +3,14 @@
   tasks:
     - name: Ping
       ping:
+
+    - name: install group package
+      yum: name="Development Tools" state=latest
+
+    - name: install all dependencies
+      yum: name=python state=installed
+      with_items:
+        - python 
+        - python-setuptools
+        - python-devel
+        - python-pip
