@@ -2,4 +2,4 @@
   hosts: db_web_servers
   tasks:
     - name: Ping
-      ping
+      ping:
