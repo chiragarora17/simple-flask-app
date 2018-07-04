@@ -35,6 +35,6 @@
 
 
     - name: start the web server 
-      command: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 --port=80 &
+      command: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 &
       become: yes
       become_method: sudo
